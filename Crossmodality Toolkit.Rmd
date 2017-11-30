@@ -1,0 +1,192 @@
+---
+title: "Crossmodality Toolkit Paper - Draft 1"
+author: "Alan Nielsen, Justin Sulik, Bill Thompson, Hannah Little, Yasamin Motamedi, Kevin Stadler, Ashley Micklos, Piera Filippi, Marcus Perlman, Andrea Ravignani, Mark Dingemanse, & Stephen Levinson"
+date: "November 2, 2017"
+output:
+  word_document:
+    reference_docx: word-styles-reference-02.docx
+---
+
+
+```{r Basic Stats, echo = FALSE, include = FALSE}
+
+TrimData <- read.csv("F:/Github Repos/CMT/Data/TrimData.csv")
+
+library(plyr)
+library(tidyverse)
+
+TrimData$DataSet <- factor(TrimData$DataSet, c("Pilot", "Main", "Affect", "Color"))
+
+PilotData <- subset(TrimData, DataSet == "Pilot")
+MainData <- subset(TrimData, DataSet == "Main")
+AffectData <- subset(TrimData, DataSet == "Affect")
+ColorData <- subset(TrimData, DataSet == "Color")
+
+```
+
+
+
+###### This is a line break
+###### This is a line break
+Affiliatons: Max Planck Institute for Psycholinguistics ...
+
+###### This is a line break
+###### This is a line break
+
+Correspondence: Alan Nielsen, Max Planck Institute for Psycholinguistics, Nijmegen, 6512 HK, Netherlands. Email: [alan@languageevolution.com](mailto: alan@languageevolution.com)
+
+###### This is a line break
+###### This is a line break
+###### This is a line break
+
+Manuscript word count: XXXX
+
+##### This is a Page Break 
+
+
+
+
+
+
+
+
+
+#ABSTRACT
+
+This is where the abstract goes. Write it.
+
+###Highlights:
+
+This is where highlights go (if whatever journal we submit to uses them)
+
+
+###Keywords:
+crossmodality; synesthesia; etc; etc
+
+##### This is a Page Break
+
+
+
+
+
+
+
+
+
+#Introduction
+
+Humans are not unbiased perceivers of the world, taking in information from the environment and processing it in a vacuum. For example, most people associate high-pitched sounds with small, fast moving objects that are located high in space. Similarly, despite 'maluma' not being a word in English, experimental participants generally agree that it is a better label for an unfamiliar curvy object than a jagged one. These types of biases have been documented since at least the late 19th century in the cognitive sciences literature (e.g. Kohler, 1929), and have an even longer pedigree in philosophy and the humanities (Plato ref). Because of their long history, these biases have gone by a number of names (phonetic symbolism: Sapir, 1929; sound symbolism: REF; metaphorical mappings: Evans & Treisman, 2010) depending on the field of study and particular interests of the researcher in question. Recently, however, the term *crossmodal correspondences* has become most common (Parise, 2016; Spence, 2011), and researchers in various fields have suggested that these crossmodal correspondences are fundamental features of human cognition (Deroy & Spence, 2016) that might have important downstream effects on the structure of languages or other cultural traditions (Cuskley thesis ref; Nielsen, 2017; other refs?).    
+
+In the past, and increasingly in the last decade, researcher have compiled a substantial catalogue of these crossmodal correspondences, using a variety of stimuli and experimental paradigms. On the stimulus front, researchers have made use of materials that varied enormously in terms of their complexity - from pure tones (Tarte, 1981) and colored triangles (Tarte, 1974) to complex musical scores (Palmer et al., 2013) and videos of dance performances (Aronoff, 2006). Similarly, evidence for putatively crossmodal correspondences has been recorded using methodologies from explicit matching tasks (Sapir, 1929) to more implicit psychophical discrimination (Parise and Spence, 2009) or association (Parise and Spence, 2012) tasks (reviewed in Parise, 2016).   
+
+As noted by others (Spence, 2011; Parise, 2016), it seems to be the case that wherever we look for evidence of a crossmodal association, we find it, so what are we to make of the growing crossmodal correspondence literature, especially with regards to what it tells us about cognition and its effects on language and related processes? One possibility is that it is indeed the case that crossmodal correspondences can be (and are) manifest in all possible configurations, but there are a number of (non-exclusive) alternatives:
+
+1. **Researcher Bias-** *Researchers may be biased in the types of correspondences that they are testing by the fact that they, themselves, make those associations.*
+2. **The File Drawer Problem-**  *Evidence for crossmodal correspondences might be inflated by the file-drawer problem, with non-significant results left unpublished.*
+3. **Task Demands-** *A wide variety of tasks are used to query crossmodal correspondences. The more explicit of these tasks might actually query response strategies that would have no impact in more implict tests.*
+4. **Stimulus Selection-** *Stimuli used in typical crossmodal correspondence tasks are generally not shared between studies, do not vary parametrically, and are presented as binary pairs (e.g. a "high" vs "low" pitched tone) which assume that crossmodal correspondences are monotonic (Parise, 2016).*
+
+If we ignore these possibilities, we can construct a network of crossmodal correspondences (Figure 1, below): 
+
+![**Figure 1-** *A network of a sample of observed crossmodal correspondences, from Parise (2016)*](figures/Parise-Net.png)
+
+This type of network representation is useful, and does indeed catalogue a subset of the plenitude of crossmodal correspondences, but comparing the associations to one another is problematic, given different stimuli, experimental protocols, and standards of evidence. This is further complicated by the fact that crossmodal correspondences are not likely to represent a unitary, ungraded, monotonic phenomenon (Westbury, 2005), but to have multiple causes, including learning and mediation (Sidhu & Pexman, 2017). 
+
+Resolving these issues will be problematic - and a major focus of multiple research streams in the coming years. In the interim, however, there are improvements to be made that can begin to untangle the gordian knot of crossmodal correspondences. Here, we present the results of a set of experiments that attempts to serve as a starting-point for further systematic exploration of crossmodal correspondences. To that end, we conducted a large-scale experiment exhaustively testing a set of crossmodal correspondences between nine stimulus domains using shared stimuli and testing multiple correspondences with each participant. This manipulation allows us to, for the first time (to our knowledge), collect and analyse a fully-specified netword of crossmodal correspondences.
+
+###### This is a line break
+
+#Experiment
+
+Papers exploring crossmodal correspondences often focus on a single association, such as the well-studied Takete-Maluma effect (Kohler, 1947) where plosive consonants like */k/* and */t/* are associated with jagged visual contours and more mellifluous sonorant consonants like /m/ and /l/ with curvier images (Nielsen & Rendall, 2011; cf. Styles & Gawne, 2017 for a recent review). This approach, of course, has its strengths, especially as researchers explore different methodologies and center in on increasing accurate descriptions of behaviour and its mechanistic underpinnings (e.g. Jones et al. ref). This focus on single correspondences, however, makes comparing the results of various experiments difficult. Consider Figure 2, below:
+
+###### This is a line break
+
+![**Figure 2-** *Crossmodal correspondences between Pitch, Size, and Speed, from three separate studies demonstrates the difficulty in relating experimental findings that use different stimuli and designs*](figures/Fig2.png)
+
+###### This is a line break
+
+Figure 2 demonstrates that even with all of the pertinent information from a set of crossmodal correspondence experiments, it can be difficult to make meaningful predictions to new stimuli or new experimental paradigms. In a novel experiment, how might pure tones at 1500 Hz (high) and 1000 Hz (low; Evans & Treisman, 2011) be matched to white dots moving at either 40% (slow) or 1650% (fast; Yong & Hsieh, 2017) the speed of a referent object? Would the results be similar to those obtained by Collier & Hubbard (2001) studying the "same" crossmodal correspondence? Would the nature of the task matter? What about the directionality of the association being tested (e.g. whether participants were choosing which of two moving images corresponds to a high-pitched sound, or decide whether a high vs. low-pitched sound corresponds to a fast-moving object). In the best cases, well-intentioned researchers have explored over a dozen crossmodal correspondences (e.g. Lindauer, 1990; other refs?), but even these types of studies do not typically make a sufficient impact that their stimuli are re-used or even replicated.
+
+The primary goal of the work presented here is thus to move towards a standardized set of stimuli that can be used to exhaustively test a large number of combinations of crossmodal correspondences. To that end, we make use of a relatively straightforward, totally explicit 2-alternative-forced-choice experimental protocol that allows for easy online deployment and the collection of large amounts of data. We recognize that this explicit experimental protocol might not be ideal, and further that our stimuli are binary, rather than graded, and overall much more simplistic than might be considered ideal based on the standards of more detailed, focused experimental studies. Thus, it is not the intention of the data presented here to supplant the majority of previously established work, or to enshrine the stimuli or methodology as the most appropriate for the study of crossmodal correspondences. To the contrary, we hope that by presenting a coherent set of data we will motivate further work on crossmodal correspondences.
+
+##Methods
+###Participants
+`r ##Justin please take a good look at this section - i've never written up methods for a mechanical turk experiment before`so not sure if this is all that is needed? Think we need to include something about the exclusion criteria etc?
+
+A total of `r length(unique(TrimData$Subject))` participants were recruited from Amazon Mechanical Turk for participation in our experiments. Of these, responses were collected from `r length(unique(PilotData$Subject))` participants as a Pilot. Subsequently, we collected data from an additional `r length(unique(MainData$Subject))` participants in the main condition (Experiment 1A), `r length(unique(AffectData$Subject))` participants for Experiment 1B, and `r length(unique(ColourData$Subject))` participants for Experiment 1C. Participants in the Pilot and in Experiment 1A were paid 1.50D US for their participation, which took approximately 15 minutes. Participants in Experiment 1B and 1C were paid 1.00 USD for their participation, which took approximately 10 minutes. Ethical approval was obtained from the Max Planck Institute for Psycholinguistics, Ethics # . 
+
+###Materials
+
+Stimuli for the Experiments presented here were created to test for crossmodal associations between 9 domains: Emotion, Color, Brightness, Pitch, Noisiness (Spectral Density), Amplitude (loudness), Speed, Size, and Shape. There stimulus domains were chosen by virtue of being well studied, and relatively easy to present to participants via an online interface. For each domain, four sets of stimulus tokens that varied only on a single dimension were created. The details of each set of stimuli can be found below.
+
+####Auditory Stimuli
+
+Auditory stimuli were created from four sources: a pure tone, a pulse, a hum, and a piano note. Table 1, below, shows the acoustical values of the stimuli.
+
+```{r Kable for Auditory Stimuli, message = FALSE, warning = FALSE, echo = FALSE}
+
+library(kableExtra)
+library(knitr)
+
+TP <- c("261.6", "261.6", "??", "??", "261.9", "261.9")
+TA <- c("80.1", "53.1", "63.0", "72.1", "64.9", "65.1")
+
+Table <- as.data.frame(cbind(TP, TA))
+
+TLinks <- c("Amp-Tone-H", "Amp-Tone-L", "Pitch-Tone-H", "Pitch-Tone-L", "Noise-Tone-H", "Noise-Tone-L")
+
+
+
+```
+
+
+###Procedure
+
+##Results
+###Data Preparation
+###Data Analysis
+####Descriptive Statistics
+
+####Other Statistics
+
+##Discussion
+
+"Of course, to better understand this dissociation, it will be useful in future research to investigate specific crossmodal correspondences using a variety of different experimental paradigms (rather than investigating different correspondences using different tasks, which has largely been the case thus far)."
+
+
+
+
+"Through a continuous interaction with the environment, our perceptual sys-
+tems can learn the natural statistical associations across sensory cues (e.g., Backus, 2011), and exploit this information to optimally integrate sensory in- formation within and across modalities (Ernst, 2007). Specifically, the brain might learn that some cues are usually strongly correlated (like visual and haptic size), some are less correlated (like auditory pitch and visual size), and some might not be correlated at all (like visual lightness and haptic stiffness). So, are crossmodal correspondences ‘special’ or are they simply instances of a continuum representing the degree of association between different sensory cues?"
+
+
+
+
+"What is more, if such studies would test the effects of two or more crossmodal correspondences within the same participants, it would be possible to assess whether the effect sizes of different crossmodal correspondences are corre- lated within the same observers. That is, it would be possible to understand to what extent the strengths of different crossmodal correspondences are similar within individuals, while at the same time the overall strength of such associa- tions varies across participants."
+
+
+
+
+
+###Systematic Responding
+
+"This is the case for loudness-brightness, where Marks (1974) foudn that approximately half of the population tested matched loud sounds to a darker grey surface, while the rest thought the opposite mapping more appropriate instead (matching the louder sounds to lighter grey surfaces instead."
+
+###Future Directions
+
+####Task Differences
+
+####Developmental Differences
+
+####Crosscultural and Crosslinguistic Differences
+
+####
+
+##### This is a Page Break
+#Acknowledgements:
+
+
+##### This is a Page Break
+#References:
+

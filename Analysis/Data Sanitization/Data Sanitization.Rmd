@@ -1,0 +1,159 @@
+---
+title: "Crossmodality Toolkit - Data Sanitization"
+author: "Alan Nielsen"
+date: "November 1, 2017"
+output:
+  html_document:
+    keep_md: true
+---
+
+This is a markdown document for importing, tidying, and recoding the data from the Crossmodality Toolkit Experiments
+
+```{r Loading Libraries, warning = FALSE, message = FALSE}
+library(tidyverse)
+```
+
+```{r Reading in the Data}
+
+pilotdata <- read.csv("F:/GitHub Repos/CMT/Data/pilotdata.csv")
+affectdata <- read.csv("F:/GitHub Repos/CMT/Data/affectdata.csv")
+maindata <- read.csv("F:/GitHub Repos/CMT/Data/maindata.csv")
+colordata <- read.csv("F:/GitHub Repos/CMT/Data/colordata.csv")
+
+```
+
+```{r Adding a column to identify the datasets}
+
+pilotdata$DataSet <- "Pilot"
+affectdata$DataSet <- "Affect"
+maindata$DataSet <- "Main"
+colordata$DataSet <- "Color"
+
+RawData1 <- rbind(pilotdata, maindata)
+RawData2 <- rbind(affectdata, colordata)
+```
+
+```{r Separate the "condition" column into focal domains and a participant number}
+RawData1 <- separate(data = RawData1, col = condition,
+                      into = c('Focal1', 'Focal2', "Focal3", "ParticipantNum"), 
+                      sep = "-", remove = FALSE)
+
+
+RawData2 <- separate(data = RawData2, col = condition,
+                     into = c('Focal1', 'ParticipantNum'),
+                     sep = '-', remove = FALSE)
+
+RawData2$Focal2 <- ''
+RawData2$Focal3 <- ''
+
+RawData <- rbind(RawData1, RawData2)
+rm(affectdata, colordata, maindata, pilotdata, RawData1, RawData2)
+
+write.csv(RawData, "F:/GitHub Repos/CMT/Data/RawData.csv", row.names = FALSE)
+
+```
+
+```{r Separating other columns}
+
+CleanData <- RawData
+rm(RawData)
+
+CleanData <- CleanData %>% 
+  separate(InducerL, c('IndDomainL', 'IndSetL', 'IndTokenL'), sep='-') %>% 
+  separate(InducerR, c('IndDomainR', 'IndSetR', 'IndTokenR'), sep='-') %>% 
+  separate(ConcurrentL, c('ConDomainL', 'ConSetL', 'ConTokenL'), sep= '-') %>%
+  separate(ConcurrentR, c('ConDomainR', 'ConSetR', 'ConTokenR'), sep= '-')
+
+#2- Codes a column that says which token (Low or High) the Left Inducer and Top Concurrent are, as a single value (e.g. "H H")
+CleanData$LeftPair <- paste(CleanData$IndTokenL, CleanData$ConTokenL)
+
+#3- Codes a new response column where if the participant has made the choice '0' (Left Inducer Matches with Top Concurrent)
+CleanData$Resp <- ifelse(CleanData$choice == 0, 
+                         paste(CleanData$IndTokenL, CleanData$ConTokenL), 
+                         paste(CleanData$IndTokenL, CleanData$ConTokenR))
+
+#4 Makes a numeric response column, where '0' means that the participant matched High with Low, and '1' means that the participant matched High with High
+CleanData$Resp2 <- ifelse(CleanData$Resp == "H H"| CleanData$Resp == "L L", 1, 0)
+
+```
+
+```{R Recoding Affect and Color Trials, warning = FALSE, message = FALSE}
+
+#1- Code "Affect" and "Color" as Tokens- once for each relevant column
+#(Note we don't need to do this for *all* columns)
+CleanData$IndDomainL2 <- ifelse(CleanData$IndDomainL == "Affect"|CleanData$IndDomainL == "Color", 
+                             paste(CleanData$IndDomainL, CleanData$IndSetL, sep = " "), 
+                       CleanData$IndDomainL)
+
+CleanData$ConDomainL2 <- ifelse(CleanData$ConDomainL == "Affect"|CleanData$ConDomainL == "Color", 
+                             paste(CleanData$ConDomainL, CleanData$ConSetL, sep = " "), 
+                       CleanData$ConDomainL)
+
+write.csv(CleanData, "F:/GitHub Repos/CMT/Data/CleanData.csv", row.names = FALSE)
+```
+
+We can now trim down this dataframe to the bare minimum that we need for analysis (to have nice clean readable data), including recoding a few columns
+
+```{r Rearranging and Trimming the Dataframe}
+
+TrimData <- subset(CleanData, select = c(DataSet, subject, condition, Focal1, Focal2, Focal3, trialNum, IndDomainL2, ConDomainL2, Resp2))
+
+rm(CleanData)
+
+```
+
+```{r Enumerating Comparisons, warning = FALSE, message = FALSE}
+
+Inducers <- unique(TrimData$IndDomainL2)       #All possible inducer token sets   
+Concurrents <- unique(TrimData$ConDomainL2)    #All possible concurrent token sets
+
+Combinations <- expand.grid(Inducer = Inducers, Concurrent = Concurrents) # Gives all combinations
+
+
+Combinations <- separate(data=Combinations, col= Inducer,     #split columns back up for subsetting
+                         into= c("IndType", "IndToken"), sep = " ", remove = FALSE)
+Combinations <- separate(data=Combinations, col= Concurrent, 
+                         into= c("ConType", "ConToken"), sep = " ", remove = FALSE)
+
+Combinations <- subset(Combinations, IndType != ConType)  #4- Removing impossible combinations
+
+Combinations$Comparison <- paste(Combinations$Inducer, Combinations$Concurrent, sep = '-') #Make a comparison column
+Combinations <- arrange(Combinations, Comparison)  # Order the data frame alphabetically by the comparison column
+
+delRows = NULL # the rows to be removed
+for(i in 1:nrow(Combinations)){
+  j = which(Combinations$Inducer == Combinations$Concurrent[i] & Combinations$Concurrent == Combinations$Inducer[i])
+  j = j [j > i]
+  if (length(j) > 0){
+    delRows = c(delRows, j)
+  }
+}
+Combinations <- Combinations[-delRows,]
+
+# Code the comparison column into the TrimData frame
+TrimData$IndCon <- paste(TrimData$IndDomainL2, TrimData$ConDomainL2, sep = '-')
+TrimData$ConInd <- paste(TrimData$ConDomainL2, TrimData$IndDomainL2, sep = '-')
+
+TrimData$Comparison <- ifelse(TrimData$IndCon %in% Combinations$Comparison,
+                               TrimData$IndCon,
+                               TrimData$ConInd)
+
+
+```
+
+```{r DataFrame Cleanup}
+
+TrimData <- subset(TrimData, select = c(DataSet, subject, condition, Focal1, Focal2, Focal3,
+                                        trialNum, IndDomainL2, ConDomainL2, Comparison, Resp2))
+
+colnames(TrimData) <- c("DataSet", "Subject", "Condition", "Focal 1", "Focal 2", "Focal 3",
+                        "TrialNum", "Inducer", "Concurrent", "Comparison", "Response")
+
+
+write.csv(TrimData, "F:/GitHub Repos/CMT/Data/TrimData.csv", row.names = FALSE)
+```
+
+
+
+
+

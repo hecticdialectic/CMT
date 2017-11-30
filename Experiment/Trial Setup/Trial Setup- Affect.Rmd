@@ -1,0 +1,145 @@
+---
+title: "Trial Setup - Affect Experiment"
+author: "Alan Nielsen"
+date: "September 11, 2017"
+output: html_document
+---
+
+This version of the code sets up a sub-experiment where every participant makes association between all affect tokens (Happy vs Sad; Excited vs Bored; Stressed vs Calm; Pleased vs Disgusted) and each of the other domains (Pitch, Amplitude, Noise, Shape, Size, Color, Brightness, Speed).
+
+Each participant is given each Affect pair once as an inducer, and once as a concurrent for all of the other domains, for a total of 64 trials.
+
+First, we will load in the packages we need
+
+```{r Package Loading, message = FALSE}
+library(tidyr) # for unite()
+library(magrittr) # for pipe (%>%)
+library(plyr)
+```
+
+Then, we will specify what all of the tokens are for each of the domains that we are interested in.
+This creates a list of lists (roughly, a dictionary)
+
+```{r Tokens}
+Tokens <- list(Pitch = c("Hum", "Piano", "Pulse", "Tone"),
+  Amp = c("Hum", "Piano", "Pulse", "Tone"),
+  Noise = c("Hum", "Piano", "Pulse", "Tone"),
+  Shape = c("BK1", "BK2", "BK3", "BK4"),
+  Size = c("Circles", "Squares", "Triangles", "Diamonds"),
+  Brightness = c("Circles", "Squares", "Triangles", "Diamonds"),
+  Color = c("RG", "RY", "YB", "RB"),
+  Speed = c("SP1", "SP2", "SP3", "SP4"))
+
+Domains <- names(Tokens)
+```
+
+Now we can stick this all together, which we will do with a function. We do this as a function so that we can then call that function multiple times and output multiple stimulus list files.
+
+First we create all of the relevant combinations that we want to test, with each token for Affect as both an Inducer and as a Concurrent with all other domains
+
+Second, we assign tokens for our non-focal domains
+
+Third, we randomize the possible configurations of trials for where the "High" inducer and concurrent go
+
+Fourth, we assign the stimuli to their locations based on their trial type
+
+Fifth, we shuffle the stimlist and add trial numbers
+
+```{r WriteStimuli Function}
+
+createstimuli <- function() {
+  
+  AffectTokens <- c("EB", "HS", "PD", "SC") 
+  Inducers <- expand.grid(Inducer = AffectTokens, Concurrent = Domains)        #1 - Create relevant combinations
+  Concurrents <- expand.grid(Inducer = Domains, Concurrent = AffectTokens)
+
+  Inducers <- Inducers[order(Inducers$Concurrent),]
+  Concurrents <- Concurrents[order(Concurrents$Inducer),]
+  NonFocalTokens <-c(sapply(Domains, function(d) sample(Tokens[[d]], 1)))   #2 Assign tokens for non-focal domains
+  Inducers$ConcurrentToken <- rep(NonFocalTokens, each=4)
+  Concurrents$InducerToken <- rep(NonFocalTokens, each=4)
+  Inducers$InducerToken <- Inducers$Inducer
+  Concurrents$ConcurrentToken <- Concurrents$Concurrent
+  Inducers$Inducer <- "Affect"
+  Concurrents$Concurrent <- "Affect"
+  
+  
+  TrialList <- rbind(Inducers, Concurrents)                       #Randomize trial type
+  TrialList$TrialType <- rep(sample(1:4),16)
+  TrialList$Focal1 <- "Affect"
+  
+  TrialList$InducerL <- mapvalues(TrialList$TrialType,
+                                  from = c(1, 2, 3, 4),
+                                  to = c("H", "H", "L", "L"))
+  TrialList$InducerR <- mapvalues(TrialList$TrialType,
+                                  from = c(1, 2, 3, 4),
+                                  to = c("L", "L", "H", "H"))     #4 Assign locations for all stims
+  
+    
+   TrialList$ConcurrentL <- mapvalues(TrialList$TrialType,
+                                  from = c(1, 2, 3, 4),
+                                  to = c("H", "L", "H", "L"))
+  TrialList$ConcurrentR <- mapvalues(TrialList$TrialType,
+                                  from = c(1, 2, 3, 4),
+                                  to = c("L", "H", "L", "H"))   
+  
+  TrialList$InducerL <- with(TrialList, paste(Inducer, InducerToken, InducerL, sep = '-'))
+  TrialList$InducerR <- with(TrialList, paste(Inducer, InducerToken, InducerR, sep = '-'))
+  TrialList$ConcurrentL <- with(TrialList, paste(Concurrent, ConcurrentToken, ConcurrentL, sep = '-'))
+  TrialList$ConcurrentR <- with(TrialList, paste(Concurrent, ConcurrentToken, ConcurrentR, sep = '-'))
+
+  TrialList <- TrialList[sample(nrow(TrialList)), ]                   #5 Shuffle the order of trials
+  TrialList$TrialNum <- seq(nrow(TrialList))
+  
+  TrialList <- subset(TrialList, select=c("TrialNum", "Focal1", "Inducer", "Concurrent", "TrialType",
+                      "InducerL", "InducerR", "ConcurrentL", "ConcurrentR"))
+
+  ########################
+  # Finally just a bit of cleanup
+
+  return(TrialList)
+}
+
+```
+So that's our CreateStimuli function, which outputs us a stimlist as a data frame.
+
+All we need to do is save this data frame as a CSV (which can then be read by our jsPsych code), and of course to do that multiple times- we need to generate a large number of stimlists - one for each participant in this version of the experiment
+
+To do that, we'll write another function, and inside of that function we will call the CreateStimuli function a number of times
+
+```{r WriteStimuli}
+writestimuli <- function(n, conditionname= "Affect") {
+  # do n times, storing the current iteration number in 'i'
+  for (i in 1:n) {
+    # create stimuli data frame. 'dimensions' is already in the right format so
+    # just pass it on directly
+    stimuli <- createstimuli()
+    # add participant 'Id' column (concatenation of the conditionname and 'i')
+    stimuli <- cbind(Id=paste(conditionname, i, sep="-"), stimuli)
+    # write resulting data frame to a file
+    write.table(stimuli,
+      paste("D:/GitHub Repos/Crossmodality-Toolkit/Stimuli/Stimlists/Affect/", "Stimuli-", conditionname, "-", i, ".csv", sep=""),
+      sep = "\t", row.names=FALSE)
+  }
+}
+
+```
+
+
+Then finally, we just need to call our writestimuli a number of times, once for each stimlist that we want- in this case we are going to be running 60 participants, but lets generate 100 stimlists, just to be on the safe side.
+
+```{r Outputting Stimlist Files}
+writestimuli(100)
+
+```
+
+
+
+
+
+
+
+
+
+
+
