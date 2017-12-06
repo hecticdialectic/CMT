@@ -2,6 +2,7 @@
 title: "Crossmodality Toolkit Paper - Draft 1"
 author: "Alan Nielsen, Justin Sulik, Bill Thompson, Hannah Little, Yasamin Motamedi, Kevin Stadler, Ashley Micklos, Piera Filippi, Marcus Perlman, Andrea Ravignani, Mark Dingemanse, & Stephen Levinson"
 date: "November 2, 2017"
+bibliography: References/CMT.json
 output:
   word_document:
     reference_docx: word-styles-reference-02.docx
@@ -11,7 +12,7 @@ output:
 
 ```{r Basic Stats, echo = FALSE, include = FALSE}
 
-TrimData <- read.csv("F:/Github Repos/CMT/Data/TrimData.csv")
+TrimData <- read.csv("Data/TrimData.csv")
 
 library(plyr)
 library(tidyverse)
@@ -74,7 +75,7 @@ crossmodality; synesthesia; etc; etc
 
 #Introduction
 
-Humans are not unbiased perceivers of the world, taking in information from the environment and processing it in a vacuum. For example, most people associate high-pitched sounds with small, fast moving objects that are located high in space. Similarly, despite 'maluma' not being a word in English, experimental participants generally agree that it is a better label for an unfamiliar curvy object than a jagged one. These types of biases have been documented since at least the late 19th century in the cognitive sciences literature (e.g. Kohler, 1929), and have an even longer pedigree in philosophy and the humanities (Plato ref). Because of their long history, these biases have gone by a number of names (phonetic symbolism: Sapir, 1929; sound symbolism: REF; metaphorical mappings: Evans & Treisman, 2010) depending on the field of study and particular interests of the researcher in question. Recently, however, the term *crossmodal correspondences* has become most common (Parise, 2016; Spence, 2011), and researchers in various fields have suggested that these crossmodal correspondences are fundamental features of human cognition (Deroy & Spence, 2016) that might have important downstream effects on the structure of languages or other cultural traditions (Cuskley thesis ref; Nielsen, 2017; other refs?).    
+Humans are not unbiased perceivers of the world, taking in information from the environment and processing it in a vacuum. For example, most people associate high-pitched sounds with small, fast moving objects that are located high in space [@hinton_frequency_1994]. Similarly, despite 'maluma' not being a word in English, experimental participants generally agree that it is a better label for an unfamiliar curvy object than a jagged one [@kohler_gestalt_1947]. These types of biases have been documented since at least the late 19th century in the cognitive sciences literature [e.g., @kohler_gestalt_1929] (e.g. Kohler, 1929), and have an even longer pedigree in philosophy and the humanities (Plato ref). Because of their long history, these biases have gone by a number of names (phonetic symbolism: [@sapir_study_1929]; sound symbolism: REF; metaphorical mappings: Evans & Treisman, 2010) depending on the field of study and particular interests of the researcher in question. Recently, however, the term *crossmodal correspondences* has become most common [@spence_crossmodal_2011; @parise_crossmodal_2016], and researchers in various fields have suggested that these crossmodal correspondences are fundamental features of human cognition [@marks_unity_1978; @deroy_crossmodal_2016] that might have important downstream effects on the structure of languages or other cultural traditions [@ohala_cross-language_1983;@nuckolls_case_1999;@ramachandran_synaesthesia_2001;@cuskley_shared_2013] (Nielsen, 2017; other refs?).    
 
 In the past, and increasingly in the last decade, researcher have compiled a substantial catalogue of these crossmodal correspondences, using a variety of stimuli and experimental paradigms. On the stimulus front, researchers have made use of materials that varied enormously in terms of their complexity - from pure tones (Tarte, 1981) and colored triangles (Tarte, 1974) to complex musical scores (Palmer et al., 2013) and videos of dance performances (Aronoff, 2006). Similarly, evidence for putatively crossmodal correspondences has been recorded using methodologies from explicit matching tasks (Sapir, 1929) to more implicit psychophical discrimination (Parise and Spence, 2009) or association (Parise and Spence, 2012) tasks (reviewed in Parise, 2016).   
 
@@ -835,7 +836,7 @@ The design and completion of the experiments presented here were part of a large
 
 ##### This is a Page Break
 
-#References:
+# References
 
 
 
