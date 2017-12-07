@@ -1,7 +1,0 @@
----
-title: "Crossmodality Toolkit Paper - Draft 1"
-author: "Alan Nielsen"
-date: "November 2, 2017"
-output: word_document
----
-
