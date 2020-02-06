@@ -1,0 +1,43 @@
+---
+title: "Direcitonality/Symmetricality of Associatons"
+output: html_document
+---
+
+```{r Testing IT}
+TrimDataAgg <- aggregate(Response ~ Inducer + Concurrent + Comparison, data= TrimData, mean)
+
+comparisons <- unique(TrimData$Comparison)
+pvals <- list()
+zvals <- list()
+statvals <- list()
+rm(comparison)
+
+
+for(comparison in comparisons){
+  
+  testdata <- subset(TrimData, Comparison == comparison)
+  Inducers <- factor(unique(testdata$Inducer))
+  
+  testdata$Inducer <- factor(testdata$Inducer)
+  testdata1 <- subset(testdata, Inducer == Inducers[1])
+  testdata2 <- subset(testdata, Inducer == Inducers[2])
+  
+
+  testres <- wilcox.test(testdata1$Response, testdata2$Response, alternative = "two.sided")
+  
+  pval <- testres$p.value
+  pvals <- c(pvals, pval)
+  
+  testZ <- qnorm(pval/2)
+  zvals <- c(zvals, testZ)
+  
+  teststat <- abs(testZ / (sqrt(nrow(testdata1))))
+  statvals <- c(statvals, teststat)
+  
+}
+
+EffSizes.Full <- as.data.frame(cbind(zvals, pvals, statvals))
+EffSizes.Full <- cbind(EffSizes.Full, comparisons)
+```
+
+
